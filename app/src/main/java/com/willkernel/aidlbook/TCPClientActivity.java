@@ -1,5 +1,6 @@
 package com.willkernel.aidlbook;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,6 +70,7 @@ public class TCPClientActivity extends AppCompatActivity implements View.OnClick
 
         Intent intent = new Intent(TCPClientActivity.this, TCPService.class);
         startService(intent);
+        WindowManager windowManager= (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 
         new Thread() {
             @Override

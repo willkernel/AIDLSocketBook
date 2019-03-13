@@ -16,8 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--<activity android:name="com.willkernel.aidlbook.BookManagerActivity">-->
-        <activity android:name="com.willkernel.aidlbook.TCPClientActivity">
+        <activity android:name="com.willkernel.aidlbook.BookManagerActivity">
+            <!--<activity android:name="com.willkernel.aidlbook.TCPClientActivity">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,12 @@
 
         <service
             android:name=".BookManagerService"
-            android:enabled="true">
+            android:enabled="true"
+            android:process=":remote">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.willkernel.aidlbook.BookManagerService"/>
+            </intent-filter>
         </service>
         <service android:name=".TCPService" />
     </application>

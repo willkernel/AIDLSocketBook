@@ -73,6 +73,7 @@ public class BookManagerService extends Service {
         mBookList.add(book);
 
         int count = mListeners.beginBroadcast();
+        Log.e(TAG,"count ="+count);
         for (int i = 0; i < count; i++) {
             INewBookArrivedListener listener = mListeners.getBroadcastItem(i);
             if (listener != null) {

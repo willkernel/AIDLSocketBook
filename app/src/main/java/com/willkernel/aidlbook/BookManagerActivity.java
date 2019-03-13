@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookManagerActivity extends AppCompatActivity {
@@ -41,7 +43,7 @@ public class BookManagerActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             bookManager = IBookManager.Stub.asInterface(service);
-            Log.e(TAG,"onServiceConnected bookManager"+bookManager);
+            Log.e(TAG, "onServiceConnected bookManager" + bookManager);
             try {
                 bookManager.registerListener(listener);
             } catch (RemoteException e) {
@@ -61,17 +63,43 @@ public class BookManagerActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 客户端
+     * <p>
+     * 首先将服务端工程中的aidl文件夹下的内容整个拷贝到客户端工程的对应位置下，由于本例的使用在一个应用中，就不需要拷贝了，其他情况一定不要忘记这一步。
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG,"onCreate "+list);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         displayTextView = (TextView) findViewById(R.id.displayTextView);
-        Intent intent = new Intent(this, BookManagerService.class);
+//        Intent intent = new Intent(this, BookManagerService.class);
+        Intent intent = new Intent();
+        intent.setPackage(getPackageName());
+        intent.setAction("com.willkernel.aidlbook.BookManagerService");
         bindService(intent, mServiceConn, Context.BIND_AUTO_CREATE);
+        getApplication();
+        getApplicationContext();
+
+    }
+
+    private static ArrayList list = null;
+
+    static {
+        list=staticMethod();
+        Log.e(TAG,"static method");
+    }
+
+    private static ArrayList staticMethod() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("ok");
+        list.add("test");
+        return list;
     }
 
     public void getBookList(View view) {
-        if(bookManager==null){
+        if (bookManager == null) {
             return;
         }
         try {
@@ -85,7 +113,7 @@ public class BookManagerActivity extends AppCompatActivity {
     }
 
     public void addBook(View view) {
-        if(bookManager==null){
+        if (bookManager == null) {
             return;
         }
         try {
@@ -106,5 +134,10 @@ public class BookManagerActivity extends AppCompatActivity {
         }
         unbindService(mServiceConn);
         super.onDestroy();
+    }
+
+    @Override
+    public boolean shouldShowRequestPermissionRationale(@NonNull String permission) {
+        return super.shouldShowRequestPermissionRationale(permission);
     }
 }
